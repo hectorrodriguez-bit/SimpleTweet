@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import java.text.BreakIterator;
 import java.util.List;
+import com.codepath.apps.restclienttemplate.models.Tweet;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
 
     Context context;
     List<Tweet> tweets;
+    TextView timeStamp;
     // Pass in the context and list of tweets
 
 
@@ -43,6 +46,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         //Bind the tweet with the view holder
         holder.bind(tweet);
+
+        //BreakIterator tvTimestamp;
+        timeStamp.setText(tweet.getFormattedTimestamp());
     }
 
     @Override
@@ -67,17 +73,20 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivProfileImage;
         TextView tvBody;
         TextView tvScreenName;
+        //TextView timeStamp;
 
         public ViewHolder(@NonNull View itemView) { //Being passed in is one row of recycler view or a tweet
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            timeStamp = itemView.findViewById(R.id.timeStamp);
         }
 
         public void bind(Tweet tweet) { //Attach data to tweet
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
+            timeStamp.setText(tweet.body);
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
         }
     }
