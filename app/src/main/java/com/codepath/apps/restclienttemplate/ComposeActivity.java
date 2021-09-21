@@ -3,11 +3,15 @@ package com.codepath.apps.restclienttemplate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -16,14 +20,18 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.parceler.Parcels;
 
+import java.text.BreakIterator;
+
 import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
     public static final String TAG = "ComposeActivity";
     public static final int MAX_TWEET_LENGTH = 140;
+    public static final int MAX_TWEET = 280;
 
     EditText etCompose;
     Button btnTweet;
+    TextView countView;
 
     TwitterClient client;
 
@@ -36,6 +44,39 @@ public class ComposeActivity extends AppCompatActivity {
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+        countView = findViewById(R.id.countView); // Made for counter on addTextChangedListener
+
+        // Add text listener to keep counter of text being input into edittext box
+        etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int before, int count) {
+                // Fires right as the text is being changed (even supplies the range of text)
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int count, int after) {
+                // Fires right before text is changing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //etCompose.setText(s.toString());
+                String display = s.toString();
+
+                //countView.setText(s.toString());
+                countView.setText(MAX_TWEET - display.length() + "");
+
+
+                if(display.length() > MAX_TWEET){
+                    countView.setTextColor(Color.RED);
+                    btnTweet.setEnabled(false);
+                }
+                else{
+                    countView.setTextColor(Color.BLACK);
+                    btnTweet.setEnabled(true);
+                }
+            }
+        });
 
         // Set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
